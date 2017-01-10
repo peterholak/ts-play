@@ -2,6 +2,8 @@
 
 TYPESCRIPT_VERSION="2.1.4"
 
+cd node_modules
+rm -rf monaco-editor
 git clone https://github.com/Microsoft/monaco-editor.git
 cd monaco-editor
 npm install
