@@ -6,7 +6,8 @@ module.exports = {
         bundle: './src/index.tsx',
         vendors: [
             'react',
-            'react-dom'
+            'react-dom',
+            'react-bootstrap'
         ]
     },
 
@@ -39,6 +40,10 @@ module.exports = {
         {
             from: 'index.html',
             to: '.'
+        },
+        {
+            from: 'node_modules/bootstrap/dist/css',
+            to: 'css'
         }]),
 
         new webpack.optimize.CommonsChunkPlugin('vendors', 'vendor.js')

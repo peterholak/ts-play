@@ -5,9 +5,14 @@
   "author": "Peter Holak",
   "license": "MIT",
   "dependencies": {
+    "@types/immutable": "^3.8.7",
     "@types/react": "0.0.0",
+    "@types/react-bootstrap": "0.0.37",
     "@types/react-dom": "^0.14.20",
+    "bootstrap": "^3.3.7",
+    "immutable": "^3.8.1",
     "react": "^15.4.2",
+    "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
     "react-monaco-editor": "^0.7.3",
     "typescript": "^2.1.4"

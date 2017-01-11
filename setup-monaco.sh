@@ -16,5 +16,7 @@ npm install --save-dev typescript@${TYPESCRIPT_VERSION}
 npm install
 gulp import-typescript
 gulp release
+rm -rf .git
 cd ../..
 gulp release
+rm -rf .git
