@@ -5,6 +5,7 @@
   "author": "Peter Holak",
   "license": "MIT",
   "dependencies": {
+    "@types/es6-promise": "0.0.32",
     "@types/immutable": "^3.8.7",
     "@types/react": "0.0.0",
     "@types/react-bootstrap": "0.0.37",

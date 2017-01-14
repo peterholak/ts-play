@@ -34,7 +34,7 @@ module.exports = {
 
     plugins: [
         new CopyWebpackPlugin([{
-            from: 'node_modules/monaco-editor/release/min/vs',
+            from: 'node_modules/monaco-editor/release/dev/vs',
             to: 'vs'
         },
         {
