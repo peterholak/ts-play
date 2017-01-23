@@ -77,6 +77,7 @@ const topPartStyle: CSS = {
 
 const bottomPartStyle: CSS = {
     height: '40%',
+    maxHeight: '400px',
     overflow: 'auto',
     borderTop: '1px solid #000'
 }

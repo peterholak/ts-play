@@ -24,7 +24,7 @@ class App extends React.Component<{}, State> {
             <Row style={({ display: 'flex' })}>
                 <Col sm={6}>
                     <MonacoEditor
-                        height={800}
+                        height={600}
                         language="typescript"
                         editorDidMount={this.editorDidMount.bind(this)}
                         defaultValue="const x: string = null\n\ninterface X {\n    name: string\n}\nconst y: Partial<X> = {}\n\nconsole.log('hello')\nthis is error"
