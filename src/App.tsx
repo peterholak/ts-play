@@ -17,6 +17,7 @@ class App extends React.Component<{}, State> {
         return <Grid width={800}>
             <h1>ts-play.com</h1>
             <p>Powered by Monaco Editor, React, TypeScript, ...</p>
+            <p><a href="https://www.twitch.tv/realharo">https://www.twitch.tv/realharo</a></p>
             <Row style={({ display: 'flex' })}>
                 <Col sm={6}>
                     <MonacoEditor
