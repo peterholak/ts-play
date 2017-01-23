@@ -18,13 +18,14 @@ class App extends React.Component<{}, State> {
             <h1>ts-play.com</h1>
             <p>Powered by Monaco Editor, React, TypeScript, ...</p>
             <p><a href="https://www.twitch.tv/realharo">https://www.twitch.tv/realharo</a></p>
+            <p><a href="https://github.com/peterholak/ts-play">https://github.com/peterholak/ts-play</a></p>
             <Row style={({ display: 'flex' })}>
                 <Col sm={6}>
                     <MonacoEditor
                         height={800}
                         language="typescript"
                         editorDidMount={this.editorDidMount.bind(this)}
-                        defaultValue="const x: string = null\n\ninterface X {\n    name: string\n}\nconst y: Partial<X> = {}\n"
+                        defaultValue="const x: string = null\n\ninterface X {\n    name: string\n}\nconst y: Partial<X> = {}\n\nconsole.log('hello')\nthis is error"
                         onChange={this.onChange.bind(this)}
                         />
                 </Col>

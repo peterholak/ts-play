@@ -31,8 +31,6 @@ class Console extends React.Component<{}, State> {
             {this.state.items.map(
                 (item: LoggedItem) => this.renderItem(item)
             )}
-            <Button onClick={() => { throw "asdf" }}>make error</Button>
-            <Button onClick={() => { console.log('asdf') }}>log something</Button>
         </div>
     }
 
