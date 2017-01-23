@@ -42,10 +42,10 @@ class Console extends React.Component<{}, State> {
         </Alert>
     }
 
-    componentDidMount() {
-        window.addEventListener('error', this.onError)
-        this.origConsoleLog = window.console.log
-        window.console.log = function(this: Console, message?: any, ...optionalParams: any[]) {
+    connectConsole(w: Window = window) {
+        w.addEventListener('error', this.onError)
+        this.origConsoleLog = w.console.log
+        w.console.log = function(this: Console, message?: any, ...optionalParams: any[]) {
             this.setState({
                 idCounter: this.state.idCounter + 1,
                 items: this.state.items.push({
@@ -54,13 +54,13 @@ class Console extends React.Component<{}, State> {
                     type: ItemType.Log
                 })
             })
-            this.origConsoleLog.apply(window, arguments)
+            this.origConsoleLog.apply(w, arguments)
         }.bind(this)
     }
 
-    componentWillUnmount() {
-        window.removeEventListener('error', this.onError)
-        window.console.log = this.origConsoleLog
+    disconnectConsole(w: Window = window) {
+        w.removeEventListener('error', this.onError)
+        w.console.log = this.origConsoleLog
     }
 
     onError = (e: ErrorEvent) => {
