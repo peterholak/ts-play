@@ -3,7 +3,7 @@ import Console from './Console'
 import { Button } from 'react-bootstrap'
 
 interface Props {
-    js?: string
+    getJs: () => Promise<string>
 }
 
 interface State {
@@ -42,7 +42,11 @@ class Output extends React.Component<Props, State> {
             <body>
                 <script>
                 window.addEventListener('message', function(event) {
-                    eval(event.data)
+                    try {
+                        eval(event.data)
+                    }catch(e) {
+                        window.parent.postMessage(e.toString(), '*')
+                    }
                 })
                 </script>
             </body>
@@ -50,9 +54,10 @@ class Output extends React.Component<Props, State> {
         `
     }
 
-    runJs() {
+    async runJs() {
+        const js = await this.props.getJs()
         this.setState({
-            js: this.props.js,
+            js,
             counter: this.state.counter + 1
         })
     }

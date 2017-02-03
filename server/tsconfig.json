@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "outDir": "bin",
+        "target": "es2015",
+        "module": "commonjs",
+        "strictNullChecks": true,
+        "noImplicitAny": true
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}

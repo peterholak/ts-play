@@ -23,11 +23,13 @@ class Console extends React.Component<{}, State> {
         items: List<LoggedItem>(),
         idCounter: 0
     }
-    origConsoleLog: any
+    originalConsoleLog: any
+    container: HTMLDivElement
 
     render() {
-        return <div>
-            <h3>Console</h3>
+        return <div ref={c => { this.container = c}}>
+            <h3 style={({ display: 'inline-block' })}>Console</h3>{' '}
+            <Button onClick={e => this.setState({ items: List<LoggedItem>() })}>Clear</Button>
             {this.state.items.map(
                 (item: LoggedItem) => this.renderItem(item)
             )}
@@ -35,14 +37,14 @@ class Console extends React.Component<{}, State> {
     }
 
     renderItem(item: LoggedItem) {
-        return <Alert key={item.id} bsStyle={item.type === ItemType.Log ? "info" : "danger"}>
+        return <div key={item.id} style={item.type === ItemType.Log ? logStyle : errorStyle}>
             {item.type === ItemType.Error ? "\u26A0" : ''} {item.message}
-        </Alert>
+        </div>
     }
 
     connectConsole(w: Window = window) {
-        w.addEventListener('error', this.onError)
-        this.origConsoleLog = w.console.log
+        window.addEventListener('message', this.onError)
+        this.originalConsoleLog = w.console.log
         w.console.log = function(this: Console, message?: any, ...optionalParams: any[]) {
             this.setState({
                 idCounter: this.state.idCounter + 1,
@@ -52,25 +54,36 @@ class Console extends React.Component<{}, State> {
                     type: ItemType.Log
                 })
             })
-            this.origConsoleLog.apply(w, arguments)
+            this.originalConsoleLog.apply(w, arguments)
         }.bind(this)
     }
 
     disconnectConsole(w: Window = window) {
-        w.removeEventListener('error', this.onError)
-        w.console.log = this.origConsoleLog
+        window.removeEventListener('message', this.onError)
+        w.console.log = this.originalConsoleLog
     }
 
-    onError = (e: ErrorEvent) => {
+    onError = (message: MessageEvent) => {
         this.setState({
             idCounter: this.state.idCounter + 1,
             items: this.state.items.push({
                 id: this.state.idCounter,
-                message: e.message,
+                message: message.data,
                 type: ItemType.Error
             })
         })
     }
+
+    componentDidUpdate(prevProps: {}, prevState: State) {
+        if (this.state.items === prevState.items) { return }
+        window.requestAnimationFrame(() => {
+            this.container.lastElementChild && this.container.lastElementChild.scrollIntoView()
+        })
+    }
 }
+
+const itemStyle = { fontFamily: 'monospace', border: '1px solid #eee' }
+const logStyle = { ...itemStyle, background: '#ddffff' }
+const errorStyle = { ...itemStyle, background: '#ffdddd' }
 
 export default Console

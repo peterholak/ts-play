@@ -1,17 +1,15 @@
-/// <reference path="../node_modules/monaco-editor/monaco.d.ts" />
 import * as React from 'react'
 import MonacoEditor from 'react-monaco-editor'
 import { Row, Col, Grid } from 'react-bootstrap'
 import Output from './Output'
+import Menu from './Menu'
 import * as ts from 'typescript'
 
-interface State {
-    js: string
-}
-
-class App extends React.Component<{}, State> {
-    state: State = { js: '' }
-    editor: monaco.editor.ICodeEditor
+class App extends React.Component<{}, {}> {
+    
+    editor: monaco.editor.ICodeEditor|undefined
+    waitingRun: ((value: string) => any)|undefined
+    typescript: ts.LanguageService|undefined
 
     render() {
         return <Grid width={800}>
@@ -21,6 +19,7 @@ class App extends React.Component<{}, State> {
                 <a href="https://www.twitch.tv/realharo">https://www.twitch.tv/realharo</a>,{' '}
                 <a href="https://github.com/peterholak/ts-play">https://github.com/peterholak/ts-play</a>
             </p>
+            <Menu />
             <Row style={({ display: 'flex' })}>
                 <Col sm={6}>
                     <MonacoEditor
@@ -28,33 +27,47 @@ class App extends React.Component<{}, State> {
                         language="typescript"
                         editorDidMount={this.editorDidMount.bind(this)}
                         defaultValue="const x: string = null\n\ninterface X {\n    name: string\n}\nconst y: Partial<X> = {}\n\nconsole.log('hello')\nthis is error"
-                        onChange={this.onChange.bind(this)}
+                        options={({
+                            automaticLayout: true
+                        })}
                         />
                 </Col>
-                <Col sm={6}><Output js={this.state.js} /></Col>
+                <Col sm={6}><Output getJs={this.getJs.bind(this)} /></Col>
             </Row>
         </Grid>
     }
 
     editorDidMount(editor: monaco.editor.IStandaloneCodeEditor) {
         this.editor = editor
-        this.getJs(editor).then(js => this.setState({ js }))
-    }
-
-    onChange(newValue: string, event: monaco.editor.IModelContentChangedEvent2) {
-        this.getJs(this.editor).then(js => this.setState({ js }))
-    }
-
-    getJs(editor: monaco.editor.ICodeEditor): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            monaco.languages.typescript.getTypeScriptWorker().then((worker: (...args: any[]) => monaco.Promise<any>) => {
-                worker(editor.getModel().uri).then((client: ts.LanguageService) => {
-                    const uri = editor.getModel().uri.toString()
-                    const outputPromise = client.getEmitOutput(uri) as any as Promise<ts.EmitOutput>
-                    outputPromise.then(output => { resolve(output.outputFiles[0].text) })
-                })
+        this.requestTypescript(editor)
+            .then(typescript => {
+                this.typescript = typescript
+                if (this.waitingRun) {
+                    this.getJsInternal(editor, this.typescript).then(this.waitingRun)
+                }
             })
+    }
+
+    getJs() {
+        return new Promise<string>(resolve => {
+            if (this.typescript === undefined || this.editor === undefined) {
+                this.waitingRun = resolve
+            }else{
+                this.getJsInternal(this.editor, this.typescript).then(resolve)
+            }
         })
+    }
+
+    private requestTypescript(editor: monaco.editor.ICodeEditor): monaco.Promise<ts.LanguageService> {
+        return monaco.languages.typescript.getTypeScriptWorker().then((worker: (uri: monaco.Uri) => monaco.Promise<ts.LanguageService>) => {
+            return worker(editor.getModel().uri)
+        })
+    }
+
+    private getJsInternal(editor: monaco.editor.ICodeEditor, typescript: ts.LanguageService): Promise<string> {
+        const uri = editor.getModel().uri.toString()
+        const outputPromise = typescript.getEmitOutput(uri) as any as Promise<ts.EmitOutput>
+        return outputPromise.then(output => output.outputFiles[0].text)
     }
 }
 
