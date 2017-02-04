@@ -1,9 +1,8 @@
-backend:
+tsplay:
     image: node:7-alpine
     ports: 
         - "2080:2080"
     volumes:
-        - ./server:/server
-        - ./dist:/frontend
-    working_dir: /server/bin
+        - ./dist:/app
+    working_dir: /app
     command: "node server.js"
