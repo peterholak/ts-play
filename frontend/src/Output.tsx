@@ -24,6 +24,7 @@ class Output extends React.Component<Props, State> {
                 <div>
                     <iframe
                         srcDoc={this.frameContents()}
+                        onLoad={() => this.myConsole.connectConsole(this.jsFrame.contentWindow)}
                         ref={frame => this.jsFrame = frame}
                         />
                 </div>
@@ -41,12 +42,14 @@ class Output extends React.Component<Props, State> {
             <html data-counter=${this.state.counter}>
             <body>
                 <script>
-                window.addEventListener('message', function(event) {
-                    try {
-                        eval(event.data)
-                    }catch(e) {
-                        window.parent.postMessage(e.toString(), '*')
-                    }
+                window.addEventListener('DOMContentLoaded', function() {
+                    window.setTimeout(function() {
+                        try {
+                            ${this.state.js}
+                        }catch(e) {
+                            window.parent.postMessage(e.toString(), '*')
+                        }
+                    }, 1)
                 })
                 </script>
             </body>
@@ -60,13 +63,6 @@ class Output extends React.Component<Props, State> {
             js,
             counter: this.state.counter + 1
         })
-    }
-
-    componentDidUpdate(prevProps: Props, prevState: State) {
-        if (this.state.js !== prevState.js || this.state.counter !== prevState.counter) {
-            this.myConsole.connectConsole(this.jsFrame.contentWindow)
-            this.jsFrame.contentWindow.postMessage(this.state.js, '*')
-        }
     }
 }
 

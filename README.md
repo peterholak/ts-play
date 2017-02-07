@@ -19,4 +19,5 @@ A better "fiddle" for TypeScript. Work in progress.
 
 - in a container: `docker-compose up` 
 - locally: run  `node server` in the `dist` directory
-- go to `http://localhost:2080/`
+
+Go to `http://localhost:2080/`
