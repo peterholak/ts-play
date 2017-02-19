@@ -1,9 +1,10 @@
 import * as React from 'react'
 import MonacoEditor from 'react-monaco-editor'
-import { Row, Col, Grid } from 'react-bootstrap'
+import { Row, Col, Grid, Navbar } from 'react-bootstrap'
 import Output from './Output'
 import Menu from './Menu'
 import * as ts from 'typescript'
+import * as api from './api'
 
 class App extends React.Component<{}, {}> {
     
@@ -13,13 +14,17 @@ class App extends React.Component<{}, {}> {
 
     render() {
         return <Grid width={800}>
-            <h1>ts-play.com</h1>
+            <Navbar inverse>
+                <Navbar.Header>
+                <Navbar.Brand>ts-play.com</Navbar.Brand>
+                </Navbar.Header>
+            </Navbar>
             <p>
                 Powered by Monaco Editor, React, TypeScript, ..., {' '}
                 <a href="https://www.twitch.tv/realharo">https://www.twitch.tv/realharo</a>,{' '}
                 <a href="https://github.com/peterholak/ts-play">https://github.com/peterholak/ts-play</a>
             </p>
-            <Menu />
+            <Menu onShareClicked={this.onShareClicked} />
             <Row style={({ display: 'flex' })}>
                 <Col sm={6}>
                     <MonacoEditor
@@ -68,6 +73,11 @@ class App extends React.Component<{}, {}> {
         const uri = editor.getModel().uri.toString()
         const outputPromise = typescript.getEmitOutput(uri) as any as Promise<ts.EmitOutput>
         return outputPromise.then(output => output.outputFiles[0].text)
+    }
+
+    onShareClicked = () => {
+        if (!this.editor) { return }
+        api.share(this.editor.getModel().getValue())
     }
 }
 

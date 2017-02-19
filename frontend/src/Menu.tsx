@@ -1,7 +1,11 @@
 import * as React from 'react'
-import { DropdownButton, MenuItem } from 'react-bootstrap'
+import { Button, DropdownButton, MenuItem } from 'react-bootstrap'
 
-class Menu extends React.Component<{}, {}> {
+export interface Props {
+    onShareClicked?: () => void
+}
+
+export class Menu extends React.Component<Props, {}> {
 
     render() {
         return <div>
@@ -12,9 +16,13 @@ class Menu extends React.Component<{}, {}> {
                 <MenuItem>Open in new tab</MenuItem>
             </DropdownButton>
 
-            <DropdownButton bsStyle="link" id="dropdown-share" title="Share">
-                <MenuItem>Get link</MenuItem>
-            </DropdownButton>
+            <Button
+                bsStyle="link"
+                id="dropdown-share"
+                onClick={this.props.onShareClicked}
+            >
+                Share
+            </Button>
 
             <DropdownButton bsStyle="link" id="dropdown-show" title="Show">
                 <MenuItem>Console</MenuItem>

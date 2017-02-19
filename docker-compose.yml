@@ -2,7 +2,8 @@ tsplay:
     image: node:7-alpine
     ports: 
         - "2080:2080"
+        - "5858:5858"
     volumes:
         - ./dist:/app
     working_dir: /app
-    command: "node server.js"
+    command: "node --debug=0.0.0.0:5858 src/server.js"
