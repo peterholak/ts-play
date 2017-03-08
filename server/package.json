@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "postbuild": "cp -r node_modules ../dist/",
-    "test": "cd ../dist && mocha"
+    "postbuild": "cp -r node_modules ../dist/server",
+    "test": "cd ../dist/server && mocha"
   },
   "author": "Peter Holak",
   "license": "MIT",

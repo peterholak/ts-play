@@ -1,3 +1,5 @@
+# This file is for development only, do not use it in production!
+
 tsplay:
     image: node:7-alpine
     ports: 

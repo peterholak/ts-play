@@ -4,7 +4,9 @@ import { SnippetStorage, makeSnippet } from './snippets'
 
 const maxSize = 1e6
 const app = express()
-const storage = SnippetStorage.withFile("./snippets.db")
+
+const storagePath = process.env['TSPLAY_STORAGE'] ? process.env['TSPLAY_STORAGE'] : './snippets.db'
+const storage = SnippetStorage.withFile(storagePath)
 
 app.get("/api", (request, response) => {
     response.send("Hello world")
