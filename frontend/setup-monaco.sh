@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TYPESCRIPT_VERSION="2.1.4"
+TYPESCRIPT_VERSION="2.2.1"
 
 cd node_modules
 rm -rf monaco-editor

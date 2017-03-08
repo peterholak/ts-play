@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Button, DropdownButton, MenuItem } from 'react-bootstrap'
 
 export interface Props {
+    snippetId: string|undefined
     onShareClicked?: () => void
 }
 
@@ -33,6 +34,8 @@ export class Menu extends React.Component<Props, {}> {
             <DropdownButton bsStyle="link" id="dropdown-demo" title="Load demo">
                 <MenuItem>React</MenuItem>
             </DropdownButton>
+
+            {this.props.snippetId ? <span>Snippet: <code>{this.props.snippetId}</code></span> : ''}
         </div>
     }
 

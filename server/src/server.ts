@@ -1,4 +1,5 @@
 import * as express from 'express'
+import { Share } from '../../api/schema'
 import { SnippetStorage, makeSnippet } from './snippets'
 
 const maxSize = 1e6
@@ -7,6 +8,18 @@ const storage = SnippetStorage.withFile("./snippets.db")
 
 app.get("/api", (request, response) => {
     response.send("Hello world")
+})
+
+app.get("/api/load/:snippetId", async (request, response) => {
+
+    const id = request.params['snippetId']
+    const data = await storage.get(id)
+    if (data === undefined) {
+        return response.send(404, { error: `Snippet not found` })
+    }
+
+    response.send({ code: data.code })
+
 })
 
 app.post("/api/share", (request, response) => {
@@ -27,6 +40,7 @@ app.post("/api/share", (request, response) => {
 })
 
 app.use("/", express.static("./frontend"))
+app.use('*', express.static("./frontend/index.html"))
 
 const server = app.listen(2080, () => console.log("Server running..."))
 

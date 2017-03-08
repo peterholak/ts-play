@@ -31,7 +31,7 @@
             "type": "node2",
             "request": "launch",
             "name": "Run server",
-            "program": "${workspaceRoot}/dist/src/server.js",
+            "program": "${workspaceRoot}/dist/server/src/server.js",
             "cwd": "${workspaceRoot}/dist"
         }
     ]
