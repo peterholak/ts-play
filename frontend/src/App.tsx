@@ -22,37 +22,37 @@ class App extends React.Component<Props, { loading: boolean }> {
     snippetLoadPromise: Promise<string>
 
     render() {
-        return <Grid width={800}>
-            <Navbar inverse>
-                <Navbar.Header>
-                <Navbar.Brand>ts-play.com</Navbar.Brand>
-                </Navbar.Header>
-            </Navbar>
-            <p>
+        return <div>
+            {this.state.loading ?
+            <div style={style.loading}>Loading...</div>
+            :''}
+            <Grid width={800}>
+                <Navbar inverse>
+                    <Navbar.Header>
+                    <Navbar.Brand>ts-play.com</Navbar.Brand>
+                    </Navbar.Header>
+                </Navbar>
+                <Menu onShareClicked={this.onShareClicked} snippetId={this.props.params.snippetId} />
+                <Row style={({ display: 'flex' })}>
+                    <Col sm={6}>
+                        <MonacoEditor
+                            height={EditorHeight}
+                            language="typescript"
+                            editorDidMount={this.editorDidMount.bind(this)}
+                            options={({
+                                automaticLayout: true
+                            })}
+                            />
+                    </Col>
+                    <Col sm={6}><Output getJs={this.getJs.bind(this)} /></Col>
+                </Row>
+            </Grid>
+            <p style={{textAlign: 'center', fontSize: '85%', marginTop: '20px'}}>
                 Powered by Monaco Editor, React, TypeScript, ..., {' '}
                 <a href="https://www.twitch.tv/realharo">https://www.twitch.tv/realharo</a>,{' '}
                 <a href="https://github.com/peterholak/ts-play">https://github.com/peterholak/ts-play</a>
             </p>
-            <Menu onShareClicked={this.onShareClicked} snippetId={this.props.params.snippetId} />
-            {this.state.loading ?
-            <Row style={style.loadingRow}>
-                <Col xs={12} style={style.loadingColumn}>Loading...</Col>
-            </Row>
-            :''}
-            <Row style={({ display: 'flex' })}>
-                <Col sm={6}>
-                    <MonacoEditor
-                        height={EditorHeight}
-                        language="typescript"
-                        editorDidMount={this.editorDidMount.bind(this)}
-                        options={({
-                            automaticLayout: true
-                        })}
-                        />
-                </Col>
-                <Col sm={6}><Output getJs={this.getJs.bind(this)} /></Col>
-            </Row>
-        </Grid>
+        </div>
     }
 
     editorDidMount(editor: monaco.editor.IStandaloneCodeEditor) {
@@ -118,12 +118,10 @@ class App extends React.Component<Props, { loading: boolean }> {
 }
 
 const style: {[name: string]: React.CSSProperties} = {
-    loadingRow: {
-        position: 'relative',
-    },
-
-    loadingColumn: {
-        position: 'absolute',
+    loading: {
+        position: 'fixed',
+        width: '100%',
+        height: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -131,7 +129,6 @@ const style: {[name: string]: React.CSSProperties} = {
         background: '#000',
         color: '#fff',
         opacity: 0.5,
-        height: EditorHeight,
         fontFamily: 'sans-serif',
         fontSize: '16pt'
     }
