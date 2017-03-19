@@ -8,7 +8,7 @@ A better "fiddle" for TypeScript. Work in progress.
 
 - `npm install`
 - `./setup-monaco.sh`
-- `webpack`
+- `webpack -p`
 
 ### Server
 

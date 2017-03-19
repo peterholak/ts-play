@@ -7,7 +7,13 @@ module.exports = {
         vendors: [
             'react',
             'react-dom',
-            'react-bootstrap'
+            'react-bootstrap',
+            'whatwg-fetch',
+            'react-router',
+            'react-monaco-editor',
+            'immutability-helper',
+            'immutable-assign',
+            __dirname + '/schema/tsconfig.schema.json'
         ]
     },
 
@@ -19,16 +25,13 @@ module.exports = {
     devtool: 'source-map',
 
     resolve: {
-        extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js']
+        extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js']
     },
 
     module: {
-        loaders: [
-            { test: /\.tsx?$/, loader: 'awesome-typescript-loader' }
-        ],
-
-        preLoaders: [
-            { test: /\.js$/, loader: 'source-map-loader'}
+        rules: [
+            { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
+            { test: /\.js$/, enforce: 'pre', loader: 'source-map-loader'}
         ]
     },
 
@@ -46,6 +49,6 @@ module.exports = {
             to: 'css'
         }]),
 
-        new webpack.optimize.CommonsChunkPlugin('vendors', 'vendor.js')
+        new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'vendor.js' })
     ]
 };

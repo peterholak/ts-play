@@ -1,9 +1,10 @@
 import * as React from 'react'
-import MonacoEditor from 'react-monaco-editor'
 import { RouteComponentProps, browserHistory } from 'react-router'
 import { Row, Col, Grid, Navbar } from 'react-bootstrap'
 import Output from './Output'
 import Menu from './Menu'
+import EditorWithTabs from './EditorWithTabs'
+import * as tsconfigSchema from '../schema/tsconfig.schema.json'
 import * as ts from 'typescript'
 import * as api from './api'
 
@@ -11,13 +12,23 @@ type Props = RouteComponentProps<{ snippetId: string }, {}>
 
 const EditorHeight = 600
 
-class App extends React.Component<Props, { loading: boolean }> {
+interface State {
+    loading: boolean,
+    files: monaco.editor.IModel[],
+    activeFile?: monaco.editor.IModel
+}
 
-    state = { loading: true }
+/** Parts of TypeScriptWorker from monaco's internals which implements ts.LanguageServiceHost, and has some extra methods. */
+type TypeScriptWorker = (ts.LanguageServiceHost & { getEmitOutput: (file: string) => Promise<ts.EmitOutput> })
+
+class App extends React.Component<Props, State> {
+
+    state: State = { loading: true, files: [] }
     
     editor: monaco.editor.ICodeEditor|undefined
     waitingRun: ((value: string) => any)|undefined
-    typescript: ts.LanguageService|undefined
+    
+    typescript: TypeScriptWorker|undefined
     defaultSnippetCode = "const x: string = null\n\ninterface X {\n    name: string\n}\nconst y: Partial<X> = {}\n\nconsole.log('hello')\nthis is error"
     snippetLoadPromise: Promise<string>
 
@@ -32,16 +43,19 @@ class App extends React.Component<Props, { loading: boolean }> {
                     <Navbar.Brand>ts-play.com</Navbar.Brand>
                     </Navbar.Header>
                 </Navbar>
-                <Menu onShareClicked={this.onShareClicked} snippetId={this.props.params.snippetId} />
+                <Menu
+                    onShareClicked={this.onShareClicked}
+                    onTsconfigClicked={this.onTsconfigClicked}
+                    snippetId={this.props.params.snippetId}
+                    />
                 <Row style={({ display: 'flex' })}>
                     <Col sm={6}>
-                        <MonacoEditor
+                        <EditorWithTabs
                             height={EditorHeight}
-                            language="typescript"
                             editorDidMount={this.editorDidMount.bind(this)}
-                            options={({
-                                automaticLayout: true
-                            })}
+                            files={this.state.files}
+                            activeFile={this.state.activeFile}
+                            onFileChanged={this.onFileChanged}
                             />
                     </Col>
                     <Col sm={6}><Output getJs={this.getJs.bind(this)} /></Col>
@@ -57,7 +71,12 @@ class App extends React.Component<Props, { loading: boolean }> {
 
     editorDidMount(editor: monaco.editor.IStandaloneCodeEditor) {
         this.editor = editor
-        this.snippetLoadPromise.then(code => editor.setValue(code))
+
+        const indexModel = monaco.editor.createModel('// index.ts', 'typescript', monaco.Uri.parse('inmemory://model/index.ts'))
+        this.snippetLoadPromise.then(code => indexModel.setValue(code))
+        this.editor.setModel(indexModel)
+        this.updateFilesState()
+
         this.requestTypescript(editor)
             .then(typescript => {
                 this.setState({ loading: false })
@@ -78,22 +97,62 @@ class App extends React.Component<Props, { loading: boolean }> {
         })
     }
 
-    private requestTypescript(editor: monaco.editor.ICodeEditor): monaco.Promise<ts.LanguageService> {
-        return monaco.languages.typescript.getTypeScriptWorker().then((worker: (uri: monaco.Uri) => monaco.Promise<ts.LanguageService>) => {
+    private requestTypescript(editor: monaco.editor.ICodeEditor): monaco.Promise<TypeScriptWorker> {
+        return monaco.languages.typescript.getTypeScriptWorker().then((worker: (uri: monaco.Uri) => monaco.Promise<TypeScriptWorker>) => {
             return worker(editor.getModel().uri)
         })
     }
 
-    private getJsInternal(editor: monaco.editor.ICodeEditor, typescript: ts.LanguageService): Promise<string> {
+    private getJsInternal(editor: monaco.editor.ICodeEditor, typescript: TypeScriptWorker): Promise<string> {
         const uri = editor.getModel().uri.toString()
         const outputPromise = typescript.getEmitOutput(uri) as any as Promise<ts.EmitOutput>
         return outputPromise.then(output => output.outputFiles[0].text)
+    }
+
+    /** Brings the `files` property in state into sync with the state inside monaco. */
+    private updateFilesState() {
+        this.setState({ files: monaco.editor.getModels() })
     }
 
     onShareClicked = async () => {
         if (!this.editor) { return }
         const id = await api.share(this.editor.getModel().getValue())
         browserHistory.push("/" + id)
+    }
+
+    onTsconfigClicked = async () => {
+        if (!this.editor || !this.typescript) { return }
+
+        const existingFile = this.findFile('tsconfig.json')
+        if (existingFile !== undefined) {
+            this.setActiveFile(existingFile)
+            return
+        }
+
+        const tsconfigModel = monaco.editor.createModel('{}', 'json', monaco.Uri.parse('inmemory://model/tsconfig.json'))
+        
+        // const config = { compilerOptions: await this.typescript.getCompilationSettings() }
+        const config = (ts as any).generateTSConfig({}, [])
+
+        monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+            schemas: [ { fileMatch: ['*'], uri: 'http://json.schemastore.org/tsconfig', schema: tsconfigSchema } ],
+            validate: true,
+            allowComments: true
+        })
+
+        tsconfigModel.setValue(JSON.stringify(config, null, 2))
+        this.setActiveFile(tsconfigModel)
+        this.updateFilesState()
+    }
+
+    onFileChanged = (file: monaco.editor.IModel) => {
+        this.setActiveFile(file)
+    }
+
+    private setActiveFile(file: monaco.editor.IModel) {
+        if (!this.editor) { return }
+        this.setState({ activeFile: file })
+        this.editor.setModel(file)
     }
 
     componentWillMount() {
@@ -114,6 +173,12 @@ class App extends React.Component<Props, { loading: boolean }> {
         if (this.editor === undefined) { return }
         const code = await api.load(id)
         this.editor.setValue(code)
+    }
+
+    private findFile(name: string): monaco.editor.IModel|undefined {
+        const index = monaco.editor.getModels().map(m => m.uri.path).indexOf('/' + name)
+        if (index === -1) { return undefined }
+        return monaco.editor.getModels()[index]
     }
 }
 

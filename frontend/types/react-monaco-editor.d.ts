@@ -8,7 +8,7 @@ declare module 'react-monaco-editor' {
         defaultValue?: string
         language?: string
         theme?: string
-        options?: monaco.editor.IEditorOptions
+        options?: monaco.editor.IEditorConstructionOptions
         editorDidMount?: (editor: monaco.editor.IStandaloneCodeEditor, monaco: {}) => void
         editorWillMount?: (monaco: any) => void
         onChange?: (newValue: string, event: monaco.editor.IModelContentChangedEvent2) => void
