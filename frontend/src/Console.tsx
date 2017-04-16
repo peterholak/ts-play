@@ -84,7 +84,7 @@ class Console extends React.Component<{}, State> {
     }
 }
 
-const itemListStyle = { overflow: 'auto', maxHeight: '200px' }
+const itemListStyle : React.CSSProperties = { overflow: 'auto', maxHeight: '200px' }
 const itemStyle = { fontFamily: 'monospace', border: '1px solid #eee' }
 const logStyle = { ...itemListStyle, background: '#ddffff' }
 const errorStyle = { ...itemListStyle, background: '#ffdddd' }
