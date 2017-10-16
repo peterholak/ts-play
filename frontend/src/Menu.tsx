@@ -3,8 +3,9 @@ import { Button, DropdownButton, MenuItem } from 'react-bootstrap'
 
 export interface Props {
     snippetId: string|undefined
-    onShareClicked?: () => void,
+    onShareClicked?: () => void
     onTsconfigClicked?: () => void
+    onApplyTsconfigClicked?: () => void
 }
 
 export class Menu extends React.Component<Props, {}> {
@@ -21,6 +22,7 @@ export class Menu extends React.Component<Props, {}> {
 
             <DropdownButton bsStyle="link" id="dropdown-options" title="Options">
                 <MenuItem onClick={this.props.onTsconfigClicked}>Edit tsconfig.json</MenuItem>
+                <MenuItem onClick={this.props.onApplyTsconfigClicked}>Apply tsconfig.json</MenuItem>
             </DropdownButton>
 
             <DropdownButton bsStyle="link" id="dropdown-coming-soon" title="Coming soon">

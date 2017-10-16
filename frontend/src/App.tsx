@@ -7,6 +7,7 @@ import EditorWithTabs from './EditorWithTabs'
 import * as tsconfigSchema from '../schema/tsconfig.schema.json'
 import * as ts from 'typescript'
 import * as api from './api'
+import InBrowserHost from './typescript/InBrowserHost'
 
 type Props = RouteComponentProps<{ snippetId: string }, {}>
 
@@ -29,6 +30,7 @@ class App extends React.Component<Props, State> {
     waitingRun: ((value: string) => any)|undefined
     
     typescript: TypeScriptWorker|undefined
+    inBrowserHost = new InBrowserHost()
     defaultSnippetCode = "const x: string = null\n\ninterface X {\n    name: string\n}\nconst y: Partial<X> = {}\n\nconsole.log('hello')\nthis is error"
     snippetLoadPromise: Promise<string>
 
@@ -46,6 +48,7 @@ class App extends React.Component<Props, State> {
                 <Menu
                     onShareClicked={this.onShareClicked}
                     onTsconfigClicked={this.onTsconfigClicked}
+                    onApplyTsconfigClicked={this.onApplyTsconfigClicked}
                     snippetId={this.props.params.snippetId}
                     />
                 <Row style={({ display: 'flex' })}>
@@ -143,6 +146,22 @@ class App extends React.Component<Props, State> {
         tsconfigModel.setValue(JSON.stringify(config, null, 2))
         this.setActiveFile(tsconfigModel)
         this.updateFilesState()
+    }
+
+    onApplyTsconfigClicked = async () => {
+        const tsconfig = this.findFile('tsconfig.json')
+        if (tsconfig === undefined) { return alert('not found') }
+        
+        try {
+            const options = ts.parseJsonConfigFileContent(
+                JSON.parse(tsconfig.getValue()),
+                this.inBrowserHost,
+                '/'
+            ).options as monaco.languages.typescript.CompilerOptions
+            monaco.languages.typescript.typescriptDefaults.setCompilerOptions(options)
+        }catch(e) {
+            alert(e)
+        }
     }
 
     onFileChanged = (file: monaco.editor.IModel) => {
