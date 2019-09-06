@@ -1,5 +1,7 @@
 import * as crypto from 'crypto'
-import levelup = require('levelup')
+import levelup, { LevelUp } from 'levelup'
+import leveldown from 'leveldown'
+import encode from 'encoding-down'
 
 interface StoredValue {
     version: number
@@ -22,13 +24,13 @@ export class SnippetStorage {
     }
 
     static withFile(filename: string) {
-        return new SnippetStorage(levelup(filename, { valueEncoding: 'json' }))
+        return new SnippetStorage(levelup(encode(leveldown(filename), { valueEncoding: 'json' })))
     }
 
     async save(contents: StoredValue) {
         const id = await this.newId()
         return new Promise<string>((resolve, reject) => {
-            this.db.put(id, contents, (err?) => {
+            this.db.put(id, contents, (err?: any) => {
                 if (err) { return reject(err) }
                 resolve(id)
             })
@@ -37,7 +39,7 @@ export class SnippetStorage {
 
     async get(id: string) {
         return new Promise<StoredValue|undefined>((resolve, reject) => {
-            this.db.get(id, (err, value) => {
+            this.db.get(id, (err: any, value: any) => {
                 if (!err) {
                     try {
                         const data = value

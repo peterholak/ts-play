@@ -1,13 +1,13 @@
 {
-    "compilerOptions": {
-        "outDir": "../dist",
-        "target": "es2015",
-        "module": "commonjs",
-        "strictNullChecks": true,
-        "sourceMap": true
-    },
-    "include": [
-        "./src/**/*",
-        "./test/**/*"
-    ]
+  "compilerOptions": {
+    "outDir": "../dist",
+    "target": "es2017",
+    "module": "commonjs",
+    "strict": true,
+    "sourceMap": true
+  },
+  "include": [
+    "./src/**/*",
+    "./test/**/*"
+  ]
 }

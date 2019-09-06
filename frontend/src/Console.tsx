@@ -24,7 +24,7 @@ class Console extends React.Component<{}, State> {
         idCounter: 0
     }
     originalConsoleLog: any
-    container: HTMLDivElement
+    container: HTMLDivElement|null = null
 
     render() {
         return <div>
@@ -32,7 +32,7 @@ class Console extends React.Component<{}, State> {
             <Button onClick={e => this.setState({ items: List<LoggedItem>() })}>Clear</Button>
             <div style={itemListStyle} ref={c => { this.container = c}}>
                 {this.state.items.map(
-                    (item: LoggedItem) => this.renderItem(item)
+                    (item: LoggedItem|undefined) => this.renderItem(item!)
                 )}
             </div>
         </div>
@@ -44,7 +44,11 @@ class Console extends React.Component<{}, State> {
         </div>
     }
 
-    connectConsole(w: Window = window) {
+    connectConsole(w: Window|null = window) {
+        if (w === null) {
+            return
+        }
+
         window.addEventListener('message', this.onError)
         this.originalConsoleLog = w.console.log
         w.console.log = function(this: Console, message?: any, ...optionalParams: any[]) {
@@ -79,7 +83,7 @@ class Console extends React.Component<{}, State> {
     componentDidUpdate(prevProps: {}, prevState: State) {
         if (this.state.items === prevState.items) { return }
         window.requestAnimationFrame(() => {
-            this.container.lastElementChild && this.container.lastElementChild.scrollIntoView()
+            this.container!.lastElementChild && this.container!.lastElementChild.scrollIntoView()
         })
     }
 }

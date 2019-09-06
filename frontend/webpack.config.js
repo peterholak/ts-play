@@ -1,54 +1,55 @@
-const webpack = require('webpack')
+const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
-module.exports = {
-    entry: {
-        bundle: './src/index.tsx',
-        vendors: [
-            'react',
-            'react-dom',
-            'react-bootstrap',
-            'whatwg-fetch',
-            'react-router',
-            'react-monaco-editor',
-            'immutability-helper',
-            'immutable-assign',
-            __dirname + '/schema/tsconfig.schema.json'
-        ]
-    },
-
-    output: {
-        filename: 'bundle.js',
-        path: __dirname + '/../dist/frontend'
-    },
-
-    devtool: 'source-map',
-
-    resolve: {
-        extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js']
-    },
-
-    module: {
-        rules: [
-            { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
-            { test: /\.js$/, enforce: 'pre', loader: 'source-map-loader'}
-        ]
-    },
-
-    plugins: [
-        new CopyWebpackPlugin([{
-            from: 'node_modules/monaco-editor/release/min/vs',
-            to: 'vs'
-        },
-        {
-            from: 'index.html',
-            to: '.'
-        },
-        {
-            from: 'node_modules/bootstrap/dist/css',
-            to: 'css'
-        }]),
-
-        new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'vendor.js' })
+const config = {
+  mode: 'development',
+  entry: {
+    'app': './src/index.tsx'
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    libraryExport: 'default'
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
+    modules: [path.resolve(__dirname, "src"), "node_modules"]
+  },
+  module: {
+    rules: [
+      { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ }
     ]
-};
+  },
+  plugins: [
+    new CopyWebpackPlugin([{
+      from: 'node_modules/monaco-editor/release/min/vs',
+      to: 'vs'
+    },
+    {
+      from: 'index.html',
+      to: '.'
+    },
+    {
+      from: 'node_modules/bootstrap/dist/css',
+      to: 'css'
+    }]),
+  ],
+  devtool: 'source-map',
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
+  externals: {
+    // TypeScript (the compiler implementation which the web page is using) uses `require()` with this module,
+    // and webpack's implementation would by default return an empty object `{}`, which TypeScript then tests
+    // with an if {} if it's falsy. With this configuration, it will be...
+    "@microsoft/typescript-etw": 'undefined'
+  },
+  // Suppress some harmless warnings for a 3rd party library (the code already handles the missing modules properly).
+  stats: {
+    warningsFilter: [ "source-map-support.js" ]
+  }
+}
+
+module.exports = config

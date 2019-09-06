@@ -1,38 +1,22 @@
 {
-    // Use IntelliSense to learn about possible Node.js debug attributes.
+    // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "type": "node",
             "request": "launch",
-            "name": "Run tests",
-            "cwd": "${workspaceRoot}/dist",
-            "runtimeExecutable": "${workspaceRoot}/dist/node_modules/.bin/mocha",
-            "windows": {
-                "runtimeExecutable": "${workspaceRoot}/dist/node_modules/.bin/mocha.cmd"
-            },
-            "runtimeArgs": [
-                "-u",
-                "tdd",
+            "name": "Run Tests",
+            "cwd": "${workspaceFolder}/dist/server",
+            "program": "${workspaceFolder}/dist/server/node_modules/mocha/bin/_mocha",
+            "args": [
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceRoot}/dist/test"
-            ],
-            "outFiles": [
-                "${workspaceRoot}/dist/**/*"
+                "test"
             ],
             "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "type": "node2",
-            "request": "launch",
-            "name": "Run server",
-            "program": "${workspaceRoot}/dist/server/src/server.js",
-            "cwd": "${workspaceRoot}/dist"
         }
     ]
 }

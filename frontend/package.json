@@ -12,9 +12,6 @@
     "@types/react-dom": "^0.14.22",
     "@types/react-router": "^3.0.10",
     "bootstrap": "^3.3.7",
-    "immutability-helper": "^2.1.1",
-    "immutable": "^3.8.1",
-    "immutable-assign": "^1.0.26",
     "mobx": "^3.1.9",
     "mobx-react": "^4.1.8",
     "react": "^15.5.4",
@@ -23,15 +20,13 @@
     "react-grid-layout": "^0.14.4",
     "react-monaco-editor": "^0.8.1",
     "react-router": "^3.0.5",
-    "typescript": "^2.2.2",
-    "webpack": "^2.4.1",
+    "typescript": "^3.6.2",
     "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
-    "awesome-typescript-loader": "^3.0.0-beta.17",
-    "copy-webpack-plugin": "^4.0.1",
-    "source-map-loader": "^0.4",
-    "source-map-support": "^0.4.14",
-    "webpack": "^2.2.1"
+    "copy-webpack-plugin": "^5.0.4",
+    "ts-loader": "^6.0.4",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.8"
   }
 }

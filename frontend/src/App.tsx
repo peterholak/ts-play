@@ -29,10 +29,10 @@ class App extends React.Component<Props, State> {
     editor: monaco.editor.ICodeEditor|undefined
     waitingRun: ((value: string) => any)|undefined
     
-    typescript: TypeScriptWorker|undefined
+    typescript: TypeScriptWorker|undefined|any
     inBrowserHost = new InBrowserHost()
     defaultSnippetCode = "const x: string = null\n\ninterface X {\n    name: string\n}\nconst y: Partial<X> = {}\n\nconsole.log('hello')\nthis is error"
-    snippetLoadPromise: Promise<string>
+    snippetLoadPromise: Promise<string>|undefined
 
     render() {
         return <div>
@@ -76,12 +76,12 @@ class App extends React.Component<Props, State> {
         this.editor = editor
 
         const indexModel = monaco.editor.createModel('// index.ts', 'typescript', monaco.Uri.parse('inmemory://model/index.ts'))
-        this.snippetLoadPromise.then(code => indexModel.setValue(code))
+        this.snippetLoadPromise!.then(code => indexModel.setValue(code))
         this.editor.setModel(indexModel)
         this.updateFilesState()
 
         this.requestTypescript(editor)
-            .then(typescript => {
+            .then((typescript: any) => {
                 this.setState({ loading: false })
                 this.typescript = typescript
                 if (this.waitingRun) {
@@ -100,14 +100,14 @@ class App extends React.Component<Props, State> {
         })
     }
 
-    private requestTypescript(editor: monaco.editor.ICodeEditor): monaco.Promise<TypeScriptWorker> {
-        return monaco.languages.typescript.getTypeScriptWorker().then((worker: (uri: monaco.Uri) => monaco.Promise<TypeScriptWorker>) => {
-            return worker(editor.getModel().uri)
+    private requestTypescript(editor: monaco.editor.ICodeEditor): Promise<TypeScriptWorker> {
+        return monaco.languages.typescript.getTypeScriptWorker().then((worker: (uri: monaco.Uri) => Promise<TypeScriptWorker>) => {
+            return worker(editor.getModel()!.uri)
         })
     }
 
     private getJsInternal(editor: monaco.editor.ICodeEditor, typescript: TypeScriptWorker): Promise<string> {
-        const uri = editor.getModel().uri.toString()
+        const uri = editor.getModel()!.uri.toString()
         const outputPromise = typescript.getEmitOutput(uri) as any as Promise<ts.EmitOutput>
         return outputPromise.then(output => output.outputFiles[0].text)
     }
@@ -119,7 +119,7 @@ class App extends React.Component<Props, State> {
 
     onShareClicked = async () => {
         if (!this.editor) { return }
-        const id = await api.share(this.editor.getModel().getValue())
+        const id = await api.share(this.editor.getModel()!.getValue())
         browserHistory.push("/" + id)
     }
 

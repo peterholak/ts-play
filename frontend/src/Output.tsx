@@ -14,8 +14,8 @@ interface State {
 class Output extends React.Component<Props, State> {
 
     state: State = { js: '', counter: 0 }
-    jsFrame: HTMLIFrameElement
-    myConsole: Console
+    jsFrame: HTMLIFrameElement|null = null
+    myConsole: Console|null = null
 
     render() {
         return <div style={wrapperStyle}>
@@ -24,7 +24,7 @@ class Output extends React.Component<Props, State> {
                 <div>
                     <iframe
                         srcDoc={this.frameContents()}
-                        onLoad={() => this.myConsole.connectConsole(this.jsFrame.contentWindow)}
+                        onLoad={() => this.myConsole!.connectConsole(this.jsFrame!.contentWindow)}
                         ref={frame => this.jsFrame = frame}
                         />
                 </div>

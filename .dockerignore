@@ -1,0 +1,6 @@
+.git/
+.vscode/
+dist/
+frontend/node_modules/
+frontend/dist/
+server/node_modules/

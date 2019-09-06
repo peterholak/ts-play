@@ -1,8 +1,24 @@
-FROM node:7-slim
-EXPOSE 2080
-USER node
-COPY dist /app
-ENV TSPLAY_STORAGE /storage
-VOLUME ["/storage"]
-WORKDIR /app
-CMD ["node","server/src/server.js"]
+FROM node:10-alpine AS build
+
+RUN apk add --no-cache git dumb-init && npm install -g gulp && mkdir -p /code/dist
+
+COPY . /code
+RUN \
+    cd /code/frontend && \
+    npm install && \
+    ./setup-monaco.sh && \
+    ./node_modules/.bin/webpack && \
+    cp -r dist ../dist/frontend
+
+RUN \
+    cd /code/server && \
+    npm install && \
+    npm run build && \
+    npm run test
+
+FROM node:10-alpine AS main
+
+COPY --from=build /code/dist /tsplay
+COPY --from=build /usr/bin/dumb-init /dumb-init
+WORKDIR /tsplay
+ENTRYPOINT ["/dumb-init", "node", "server/src/server"]

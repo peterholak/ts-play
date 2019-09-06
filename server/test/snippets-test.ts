@@ -1,16 +1,17 @@
 import { assert } from 'chai'
-import chai = require('chai')
-import chaiAsPromised = require('chai-as-promised')
+import * as chai from 'chai'
+import * as chaiAsPromised from 'chai-as-promised'
 import { SnippetStorage } from '../src/snippets'
-import levelup = require('levelup')
-import memdown = require('memdown')
+import levelup from 'levelup'
+import memdown from 'memdown'
+import encode from 'encoding-down'
 
 chai.use(chaiAsPromised)
 
 describe("SnippetStorage", () => {
 
-    function storage(random?: (number) => Buffer) { 
-        return new SnippetStorage(levelup("/", { db: memdown, valueEncoding: 'json' }), random)
+    function storage(random?: (number: number) => Buffer) { 
+        return new SnippetStorage(levelup(encode(memdown(), { valueEncoding: 'json' })), random)
     }
     const data = { version: 1, code: "code" }
 
@@ -73,7 +74,7 @@ describe("SnippetStorage", () => {
         constructor(public useCounter = true) { }
         get(size: number) {
             this.counter++
-            return new Buffer(Array(size).fill(this.useCounter ? this.counter : 0))
+            return Buffer.from(Array(size).fill(this.useCounter ? this.counter : 0))
         }
         goBack() { this.counter-- }
     }
