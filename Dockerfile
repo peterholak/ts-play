@@ -7,7 +7,7 @@ RUN \
     cd /code/frontend && \
     npm install && \
     ./setup-monaco.sh && \
-    ./node_modules/.bin/webpack && \
+    ./node_modules/.bin/webpack -p && \
     cp -r dist ../dist/frontend
 
 RUN \

@@ -6,7 +6,6 @@
   "license": "MIT",
   "dependencies": {
     "@types/react": "^16.9.2",
-    "@types/react-bootstrap": "^0.32.19",
     "@types/react-dom": "^16.9.0",
     "@types/react-router": "^5.0.3",
     "bootstrap": "^4.3.1",

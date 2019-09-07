@@ -6,13 +6,10 @@ import Output from './Output'
 import Menu from './Menu'
 import EditorWithTabs from './EditorWithTabs'
 import * as tsconfigSchema from '../schema/tsconfig.schema.json'
-import { LanguageServiceHost, EmitOutput } from 'typescript'
+import * as ts from 'typescript'
 import * as api from './api'
 import InBrowserHost from './typescript/InBrowserHost'
 import * as stripJsonComments from 'strip-json-comments'
-
-let ts: any = undefined
-import('typescript').then(typescript => ts = typescript)
 
 type Props = RouteComponentProps<{ snippetId: string }, {}>
 
@@ -25,7 +22,7 @@ interface State {
 }
 
 /** Parts of TypeScriptWorker from monaco's internals which implements ts.LanguageServiceHost, and has some extra methods. */
-type TypeScriptWorker = (LanguageServiceHost & { getEmitOutput: (file: string) => Promise<EmitOutput> })
+type TypeScriptWorker = (ts.LanguageServiceHost & { getEmitOutput: (file: string) => Promise<ts.EmitOutput> })
 
 class App extends React.Component<Props, State> {
 
@@ -110,7 +107,7 @@ class App extends React.Component<Props, State> {
 
     private getJsInternal(editor: monaco.editor.ICodeEditor, typescript: TypeScriptWorker): Promise<string> {
         const uri = editor.getModel()!.uri.toString()
-        const outputPromise = typescript.getEmitOutput(uri) as any as Promise<EmitOutput>
+        const outputPromise = typescript.getEmitOutput(uri) as any as Promise<ts.EmitOutput>
         return outputPromise.then(output => output.outputFiles[0].text)
     }
 
