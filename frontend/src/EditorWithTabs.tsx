@@ -22,7 +22,8 @@ class EditorWithTabs extends React.Component<Props, {}> {
                 language="typescript"
                 editorDidMount={this.editorDidMount.bind(this)}
                 options={({
-                    automaticLayout: true
+                    automaticLayout: true,
+                    minimap: { enabled: false }
                 })}
                 />
         </div>

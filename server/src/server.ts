@@ -6,6 +6,7 @@ const maxSize = 1e6
 const app = express()
 
 const storagePath = process.env['TSPLAY_STORAGE'] ? process.env['TSPLAY_STORAGE']! : './snippets.db'
+const frontendPath = process.env['FRONTEND_PATH'] ? process.env['FRONTEND_PATH'] : './frontend'
 const storage = SnippetStorage.withFile(storagePath)
 
 app.get("/api", (request, response) => {
@@ -41,8 +42,8 @@ app.post("/api/share", (request, response) => {
     
 })
 
-app.use("/", express.static("./frontend"))
-app.use('*', express.static("./frontend/index.html"))
+app.use("/", express.static(frontendPath))
+app.use('*', express.static(`${frontendPath}/index.html`))
 
 const server = app.listen(2080, () => console.log("Server running..."))
 

@@ -7,6 +7,16 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Run Server",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/dist/server/src/server",
+            "env": {
+                "FRONTEND_PATH": "./frontend/dist"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Run Tests",
             "cwd": "${workspaceFolder}/dist/server",
             "program": "${workspaceFolder}/dist/server/node_modules/mocha/bin/_mocha",

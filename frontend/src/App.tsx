@@ -135,7 +135,7 @@ class App extends React.Component<Props, State> {
         const tsconfigModel = monaco.editor.createModel('{}', 'json', monaco.Uri.parse('inmemory://model/tsconfig.json'))
         
         // const config = { compilerOptions: await this.typescript.getCompilationSettings() }
-        const config = (ts as any).generateTSConfig({}, [])
+        const config = (ts as any).generateTSConfig({}, [], "\n")
 
         monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             schemas: [ { fileMatch: ['*'], uri: 'http://json.schemastore.org/tsconfig', schema: tsconfigSchema } ],
@@ -143,7 +143,7 @@ class App extends React.Component<Props, State> {
             allowComments: true
         })
 
-        tsconfigModel.setValue(JSON.stringify(config, null, 2))
+        tsconfigModel.setValue(config)
         this.setActiveFile(tsconfigModel)
         this.updateFilesState()
     }
