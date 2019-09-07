@@ -1,6 +1,6 @@
-import * as ts from 'typescript'
+import { ParseConfigHost } from 'typescript'
 
-export default class InBrowserHost implements ts.ParseConfigHost {
+export default class InBrowserHost implements ParseConfigHost {
 
     useCaseSensitiveFileNames: boolean = true
 

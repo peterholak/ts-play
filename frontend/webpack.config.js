@@ -17,22 +17,16 @@ const config = {
   },
   module: {
     rules: [
-      { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ }
+      { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules|monaco-build/ }
     ]
   },
   plugins: [
-    new CopyWebpackPlugin([{
-      from: 'node_modules/monaco-editor/release/min/vs',
-      to: 'vs'
-    },
-    {
-      from: 'index.html',
-      to: '.'
-    },
-    {
-      from: 'node_modules/bootstrap/dist/css',
-      to: 'css'
-    }]),
+    new CopyWebpackPlugin([
+      { from: 'monaco-build/monaco-editor/release/min/vs', to: 'vs' },
+      { from: 'monaco-build/monaco-editor/release/min-maps', to: 'min-maps' },
+      { from: 'index.html', to: '.' },
+      { from: 'node_modules/bootstrap/dist/css', to: 'css' }
+    ]),
   ],
   devtool: 'source-map',
   optimization: {
@@ -48,7 +42,7 @@ const config = {
   },
   // Suppress some harmless warnings for a 3rd party library (the code already handles the missing modules properly).
   stats: {
-    warningsFilter: [ "source-map-support.js" ]
+    warningsFilter: ["source-map-support.js"]
   }
 }
 

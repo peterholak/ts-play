@@ -8,6 +8,23 @@
     <body>
         <div id="target"></div>
 
+         <!-- Monaco AMD loader (the ES module based one has a few issues) -->
+         <script src="./vs/loader.js"></script>
+         <script>
+             let monacoPromise = undefined
+             function loadMonaco() {
+                 if (monacoPromise === undefined) {
+                     monacoPromise = new Promise((resolve, reject) => {
+                         require(['vs/editor/editor.main'], function() {
+                             // TODO: error handling
+                             resolve()
+                         })
+                     })
+                 }
+                 return monacoPromise
+             }
+         </script>
+
         <!-- Dependencies -->
         <script src="./vendors~app.js"></script>
 

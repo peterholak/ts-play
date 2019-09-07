@@ -1,13 +1,18 @@
 import * as React from 'react'
-import { RouteComponentProps, browserHistory } from 'react-router'
-import { Row, Col, Grid, Navbar } from 'react-bootstrap'
+import { RouteComponentProps } from 'react-router'
+import { browserHistory } from './index'
+import { Row, Col, Container, Navbar } from 'react-bootstrap'
 import Output from './Output'
 import Menu from './Menu'
 import EditorWithTabs from './EditorWithTabs'
 import * as tsconfigSchema from '../schema/tsconfig.schema.json'
-import * as ts from 'typescript'
+import { LanguageServiceHost, EmitOutput } from 'typescript'
 import * as api from './api'
 import InBrowserHost from './typescript/InBrowserHost'
+import * as stripJsonComments from 'strip-json-comments'
+
+let ts: any = undefined
+import('typescript').then(typescript => ts = typescript)
 
 type Props = RouteComponentProps<{ snippetId: string }, {}>
 
@@ -20,7 +25,7 @@ interface State {
 }
 
 /** Parts of TypeScriptWorker from monaco's internals which implements ts.LanguageServiceHost, and has some extra methods. */
-type TypeScriptWorker = (ts.LanguageServiceHost & { getEmitOutput: (file: string) => Promise<ts.EmitOutput> })
+type TypeScriptWorker = (LanguageServiceHost & { getEmitOutput: (file: string) => Promise<EmitOutput> })
 
 class App extends React.Component<Props, State> {
 
@@ -39,17 +44,15 @@ class App extends React.Component<Props, State> {
             {this.state.loading ?
             <div style={style.loading}>Loading...</div>
             :''}
-            <Grid width={800}>
-                <Navbar inverse>
-                    <Navbar.Header>
+            <Container>
+                <Navbar bg="dark" variant="dark">
                     <Navbar.Brand>ts-play.com</Navbar.Brand>
-                    </Navbar.Header>
                 </Navbar>
                 <Menu
                     onShareClicked={this.onShareClicked}
                     onTsconfigClicked={this.onTsconfigClicked}
                     onApplyTsconfigClicked={this.onApplyTsconfigClicked}
-                    snippetId={this.props.params.snippetId}
+                    snippetId={this.props.match.params.snippetId}
                     />
                 <Row style={({ display: 'flex' })}>
                     <Col sm={6}>
@@ -63,10 +66,9 @@ class App extends React.Component<Props, State> {
                     </Col>
                     <Col sm={6}><Output getJs={this.getJs.bind(this)} /></Col>
                 </Row>
-            </Grid>
+            </Container>
             <p style={{textAlign: 'center', fontSize: '85%', marginTop: '20px'}}>
                 Powered by Monaco Editor, React, TypeScript, ..., {' '}
-                <a href="https://www.twitch.tv/realharo">https://www.twitch.tv/realharo</a>,{' '}
                 <a href="https://github.com/peterholak/ts-play">https://github.com/peterholak/ts-play</a>
             </p>
         </div>
@@ -108,7 +110,7 @@ class App extends React.Component<Props, State> {
 
     private getJsInternal(editor: monaco.editor.ICodeEditor, typescript: TypeScriptWorker): Promise<string> {
         const uri = editor.getModel()!.uri.toString()
-        const outputPromise = typescript.getEmitOutput(uri) as any as Promise<ts.EmitOutput>
+        const outputPromise = typescript.getEmitOutput(uri) as any as Promise<EmitOutput>
         return outputPromise.then(output => output.outputFiles[0].text)
     }
 
@@ -154,7 +156,7 @@ class App extends React.Component<Props, State> {
         
         try {
             const options = ts.parseJsonConfigFileContent(
-                JSON.parse(tsconfig.getValue()),
+                JSON.parse(stripJsonComments(tsconfig.getValue())),
                 this.inBrowserHost,
                 '/'
             ).options as monaco.languages.typescript.CompilerOptions
@@ -174,17 +176,17 @@ class App extends React.Component<Props, State> {
         this.editor.setModel(file)
     }
 
-    componentWillMount() {
-        if (this.props.params.snippetId) {
-            this.snippetLoadPromise = api.load(this.props.params.snippetId)
+    componentDidMount() {
+        if (this.props.match.params.snippetId) {
+            this.snippetLoadPromise = api.load(this.props.match.params.snippetId)
         }else{
             this.snippetLoadPromise = Promise.resolve(this.defaultSnippetCode)
         }
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.params.snippetId !== this.props.params.snippetId) {
-            this.loadSnippet(nextProps.params.snippetId)
+    componentDidUpdate(prevProps: Props) {
+        if (this.props.match.params.snippetId !== prevProps.match.params.snippetId) {
+            this.loadSnippet(this.props.match.params.snippetId)
         }
     }
 

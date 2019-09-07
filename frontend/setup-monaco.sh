@@ -4,8 +4,8 @@ TYPESCRIPT_VERSION="3.6.2"
 MONACO_COMMIT=master
 MONACO_TS_COMMIT=master
 
-cd node_modules
-rm -rf monaco-editor
+mkdir -p monaco-build
+cd monaco-build
 git clone https://github.com/Microsoft/monaco-editor.git
 cd monaco-editor
 git checkout $MONACO_COMMIT

@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { List } from 'immutable'
 import { Alert, Button } from 'react-bootstrap'
 
 interface State {
-    items: List<LoggedItem>
+    items: LoggedItem[]
     idCounter: number
 }
 
@@ -20,7 +19,7 @@ enum ItemType {
 class Console extends React.Component<{}, State> {
 
     state: State = {
-        items: List<LoggedItem>(),
+        items: [],
         idCounter: 0
     }
     originalConsoleLog: any
@@ -29,7 +28,7 @@ class Console extends React.Component<{}, State> {
     render() {
         return <div>
             <h3 style={({ display: 'inline-block' })}>Console</h3>{' '}
-            <Button onClick={e => this.setState({ items: List<LoggedItem>() })}>Clear</Button>
+            <Button onClick={() => this.setState({ items: [] })}>Clear</Button>
             <div style={itemListStyle} ref={c => { this.container = c}}>
                 {this.state.items.map(
                     (item: LoggedItem|undefined) => this.renderItem(item!)
@@ -54,11 +53,11 @@ class Console extends React.Component<{}, State> {
         w.console.log = function(this: Console, message?: any, ...optionalParams: any[]) {
             this.setState({
                 idCounter: this.state.idCounter + 1,
-                items: this.state.items.push({
+                items: [ ...this.state.items, {
                     id: this.state.idCounter,
                     message: message.toString(),
                     type: ItemType.Log
-                })
+                }]
             })
             this.originalConsoleLog.apply(w, arguments)
         }.bind(this)
@@ -72,11 +71,11 @@ class Console extends React.Component<{}, State> {
     onError = (message: MessageEvent) => {
         this.setState({
             idCounter: this.state.idCounter + 1,
-            items: this.state.items.push({
+            items: [ ...this.state.items, {
                 id: this.state.idCounter,
                 message: message.data,
                 type: ItemType.Error
-            })
+            }]
         })
     }
 

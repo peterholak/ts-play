@@ -2,7 +2,8 @@
     "compilerOptions": {
         "outDir": "dist",
         "sourceMap": true,
-        "module": "commonjs",
+        "module": "esnext",
+        "moduleResolution": "node",
         "target": "es2017",
         "lib": [ "dom", "es2017" ],
         "jsx": "react",
@@ -10,6 +11,8 @@
     },
     "include": [
         "./types/**/*",
-        "./src/**/*"
+        "./src/**/*",
+        "./monaco-build/monaco-editor/release/monaco.d.ts",
+        "./monaco-build/monaco-editor/node_modules/monaco-typescript/release/monaco.d.ts"
     ]
 }
