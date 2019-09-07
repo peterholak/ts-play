@@ -4,6 +4,16 @@
         <meta charset="UTF-8" />
         <title>ts-play.com</title>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <style>
+            html, body, #target { height: 100% }
+            
+            /*
+            The editor kinda manages its own size dynamically (fits into parent box),
+            so this way it won't stretch its parent boxes (which would make the whole
+            thing unable to shrink).
+            */
+            .monaco-editor { position: absolute; }
+        </style>
     </head>
     <body>
         <div id="target"></div>

@@ -11,7 +11,6 @@
         "resolveJsonModule": true
     },
     "include": [
-        "./types/**/*",
         "./src/**/*",
         "./monaco-build/monaco-editor/release/monaco.d.ts",
         "./monaco-build/monaco-editor/node_modules/monaco-typescript/release/monaco.d.ts"

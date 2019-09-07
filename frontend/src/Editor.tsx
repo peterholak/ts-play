@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 interface EditorProps {
-    height: number
+    height?: number
     editorDidMount: (editor: monaco.editor.IStandaloneCodeEditor) => void
 }
 
@@ -10,7 +10,7 @@ export default class Editor extends React.Component<EditorProps, {}> {
     container: HTMLDivElement|null = null
 
     render() {
-        return <div style={{height: this.props.height}} ref={e => this.container = e}></div>
+        return <div style={{ flex: 1 }} ref={e => this.container = e}></div>
     }
 
     async componentDidMount() {

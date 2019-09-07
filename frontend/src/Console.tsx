@@ -26,9 +26,11 @@ class Console extends React.Component<{}, State> {
     container: HTMLDivElement|null = null
 
     render() {
-        return <div>
-            <h3 style={({ display: 'inline-block' })}>Console</h3>{' '}
-            <Button onClick={() => this.setState({ items: [] })}>Clear</Button>
+        return <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+            <div>
+                <h3 style={({ display: 'inline-block' })}>Console</h3>{' '}
+                <Button onClick={() => this.setState({ items: [] })}>Clear</Button>
+            </div>
             <div style={itemListStyle} ref={c => { this.container = c}}>
                 {this.state.items.map(
                     (item: LoggedItem|undefined) => this.renderItem(item!)
@@ -87,9 +89,15 @@ class Console extends React.Component<{}, State> {
     }
 }
 
-const itemListStyle = { overflow: 'auto' as 'auto', maxHeight: '200px' }
+const itemListStyle: React.CSSProperties = {
+    border: '1px dashed #000',
+    flex: 1,
+    flexBasis: 0,
+    minHeight: '2rem',
+    overflow: 'auto'
+}
 const itemStyle = { fontFamily: 'monospace', border: '1px solid #eee' }
-const logStyle = { ...itemListStyle, background: '#ddffff' }
-const errorStyle = { ...itemListStyle, background: '#ffdddd' }
+const logStyle = { ...itemStyle, background: '#ddffff' }
+const errorStyle = { ...itemStyle, background: '#ffdddd' }
 
 export default Console

@@ -13,8 +13,6 @@ import * as stripJsonComments from 'strip-json-comments'
 
 type Props = RouteComponentProps<{ snippetId: string }, {}>
 
-const EditorHeight = 600
-
 interface State {
     loading: boolean,
     files: monaco.editor.IModel[],
@@ -27,44 +25,50 @@ type TypeScriptWorker = (ts.LanguageServiceHost & { getEmitOutput: (file: string
 class App extends React.Component<Props, State> {
 
     state: State = { loading: true, files: [] }
-    
-    editor: monaco.editor.ICodeEditor|undefined
-    waitingRun: ((value: string) => any)|undefined
-    
-    typescript: TypeScriptWorker|undefined|any
+
+    editor: monaco.editor.ICodeEditor | undefined
+    waitingRun: ((value: string) => any) | undefined
+
+    typescript: TypeScriptWorker | undefined | any
     inBrowserHost = new InBrowserHost()
     defaultSnippetCode = "const x: string = null\n\ninterface X {\n    name: string\n}\nconst y: Partial<X> = {}\n\nconsole.log('hello')\nthis is error"
-    snippetLoadPromise: Promise<string>|undefined
+    snippetLoadPromise: Promise<string> | undefined
 
     render() {
-        return <div>
+        return <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             {this.state.loading ?
-            <div style={style.loading}>Loading...</div>
-            :''}
-            <Container>
-                <Navbar bg="dark" variant="dark">
+                <div style={style.loading}>Loading...</div>
+                : ''}
+            <Navbar bg="dark" variant="dark" expand="sm">
+                <Container>
                     <Navbar.Brand>ts-play.com</Navbar.Brand>
-                </Navbar>
-                <Menu
-                    onShareClicked={this.onShareClicked}
-                    onTsconfigClicked={this.onTsconfigClicked}
-                    onApplyTsconfigClicked={this.onApplyTsconfigClicked}
-                    snippetId={this.props.match.params.snippetId}
-                    />
-                <Row style={({ display: 'flex' })}>
-                    <Col sm={6}>
+                    <Navbar.Toggle aria-controls="navbar-menu" />
+                    <Navbar.Collapse id="navbar-menu">
+                        <Menu
+                            onShareClicked={this.onShareClicked}
+                            onTsconfigClicked={this.onTsconfigClicked}
+                            onApplyTsconfigClicked={this.onApplyTsconfigClicked}
+                            snippetId={this.props.match.params.snippetId}
+                        />
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+            <Container style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <Row style={({ flex: 1, display: 'flex' })}>
+                    <Col sm={8} style={{ flex: 1, display: 'flex' }}>
                         <EditorWithTabs
-                            height={EditorHeight}
                             editorDidMount={this.editorDidMount.bind(this)}
                             files={this.state.files}
                             activeFile={this.state.activeFile}
                             onFileChanged={this.onFileChanged}
-                            />
+                        />
                     </Col>
-                    <Col sm={6}><Output getJs={this.getJs.bind(this)} /></Col>
+                    <Col sm={4} style={{ display: 'flex' }}>
+                        <Output getJs={this.getJs.bind(this)} />
+                    </Col>
                 </Row>
             </Container>
-            <p style={{textAlign: 'center', fontSize: '85%', marginTop: '20px'}}>
+            <p style={{ textAlign: 'center', fontSize: '85%', marginTop: '20px' }}>
                 Powered by Monaco Editor, React, TypeScript, ..., {' '}
                 <a href="https://github.com/peterholak/ts-play">https://github.com/peterholak/ts-play</a>
             </p>
@@ -93,7 +97,7 @@ class App extends React.Component<Props, State> {
         return new Promise<string>(resolve => {
             if (this.typescript === undefined || this.editor === undefined) {
                 this.waitingRun = resolve
-            }else{
+            } else {
                 this.getJsInternal(this.editor, this.typescript).then(resolve)
             }
         })
@@ -132,12 +136,12 @@ class App extends React.Component<Props, State> {
         }
 
         const tsconfigModel = monaco.editor.createModel('{}', 'json', monaco.Uri.parse('inmemory://model/tsconfig.json'))
-        
+
         // const config = { compilerOptions: await this.typescript.getCompilationSettings() }
         const config = (ts as any).generateTSConfig({}, [], "\n")
 
         monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-            schemas: [ { fileMatch: ['*'], uri: 'http://json.schemastore.org/tsconfig', schema: tsconfigSchema } ],
+            schemas: [{ fileMatch: ['*'], uri: 'http://json.schemastore.org/tsconfig', schema: tsconfigSchema }],
             validate: true,
             allowComments: true
         })
@@ -150,7 +154,7 @@ class App extends React.Component<Props, State> {
     onApplyTsconfigClicked = async () => {
         const tsconfig = this.findFile('tsconfig.json')
         if (tsconfig === undefined) { return alert('not found') }
-        
+
         try {
             const options = ts.parseJsonConfigFileContent(
                 JSON.parse(stripJsonComments(tsconfig.getValue())),
@@ -158,7 +162,7 @@ class App extends React.Component<Props, State> {
                 '/'
             ).options as monaco.languages.typescript.CompilerOptions
             monaco.languages.typescript.typescriptDefaults.setCompilerOptions(options)
-        }catch(e) {
+        } catch (e) {
             alert(e)
         }
     }
@@ -176,7 +180,7 @@ class App extends React.Component<Props, State> {
     componentDidMount() {
         if (this.props.match.params.snippetId) {
             this.snippetLoadPromise = api.load(this.props.match.params.snippetId)
-        }else{
+        } else {
             this.snippetLoadPromise = Promise.resolve(this.defaultSnippetCode)
         }
     }
@@ -193,14 +197,14 @@ class App extends React.Component<Props, State> {
         this.editor.setValue(code)
     }
 
-    private findFile(name: string): monaco.editor.IModel|undefined {
+    private findFile(name: string): monaco.editor.IModel | undefined {
         const index = monaco.editor.getModels().map(m => m.uri.path).indexOf('/' + name)
         if (index === -1) { return undefined }
         return monaco.editor.getModels()[index]
     }
 }
 
-const style: {[name: string]: React.CSSProperties} = {
+const style: { [name: string]: React.CSSProperties } = {
     loading: {
         position: 'fixed',
         width: '100%',

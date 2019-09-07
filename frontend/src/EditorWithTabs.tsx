@@ -3,7 +3,7 @@ import { Nav } from 'react-bootstrap'
 import Editor from './Editor'
 
 interface Props {
-    height: number
+    height?: number
     files: monaco.editor.IModel[]
     editorDidMount: (editor: monaco.editor.IStandaloneCodeEditor) => void
     onFileChanged: (file: monaco.editor.IModel) => void
@@ -15,13 +15,19 @@ class EditorWithTabs extends React.Component<Props, {}> {
     editor: monaco.editor.IStandaloneCodeEditor | undefined
 
     render() {
-        return <div>
+        return <div style={{ width: '100%', minHeight: '5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
             {this.props.files.length > 1 ? this.renderTabs() : ''}
             <Editor
                 height={this.props.height}
                 editorDidMount={this.editorDidMount.bind(this)}
             />
         </div>
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.files.length === 0 && this.props.files.length > 0) {
+            this.editor && this.editor.layout()
+        }
     }
 
     renderTabs() {

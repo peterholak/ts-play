@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Button, DropdownButton, Dropdown, ButtonGroup } from 'react-bootstrap'
+import { Button, DropdownButton, Dropdown, ButtonGroup, Nav, NavDropdown } from 'react-bootstrap'
 
 export interface Props {
-    snippetId: string|undefined
+    snippetId: string | undefined
     onShareClicked?: () => void
     onTsconfigClicked?: () => void
     onApplyTsconfigClicked?: () => void
@@ -11,42 +11,41 @@ export interface Props {
 export class Menu extends React.Component<Props, {}> {
 
     render() {
-        return <ButtonGroup>
-            <Button
-                variant="link"
+        return <Nav>
+            <Nav.Link
                 id="dropdown-share"
                 onClick={this.props.onShareClicked}
             >
                 Share
-            </Button>
+            </Nav.Link>
 
-            <DropdownButton variant="link" id="dropdown-options" title="Options">
-                <Dropdown.Item onClick={this.props.onTsconfigClicked}>Edit tsconfig.json</Dropdown.Item>
-                <Dropdown.Item onClick={this.props.onApplyTsconfigClicked}>Apply tsconfig.json</Dropdown.Item>
-            </DropdownButton>
+            <NavDropdown id="dropdown-options" title="Options">
+                <NavDropdown.Item onClick={this.props.onTsconfigClicked}>Edit tsconfig.json</NavDropdown.Item>
+                <NavDropdown.Item onClick={this.props.onApplyTsconfigClicked}>Apply tsconfig.json</NavDropdown.Item>
+            </NavDropdown>
 
-            <DropdownButton variant="link" id="dropdown-coming-soon" title="Coming soon">
-                <Dropdown.Item><strong>Options</strong></Dropdown.Item>
-                <Dropdown.Item>TypeScript version</Dropdown.Item>
-                <Dropdown.Item>Open in new tab</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item><strong>Show</strong></Dropdown.Item>
-                <Dropdown.Item>Console</Dropdown.Item>
-                <Dropdown.Item>Output</Dropdown.Item>
-                <Dropdown.Item>Compiled JS</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item><strong>Other features</strong></Dropdown.Item>
-                <Dropdown.Item>Multiple files</Dropdown.Item>
-                <Dropdown.Item>Improved look</Dropdown.Item>
-                <Dropdown.Item>Better browser/mobile support</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item><strong>Demos</strong></Dropdown.Item>
-                <Dropdown.Item>React + TypeScript</Dropdown.Item>
-                <Dropdown.Item>Download as zipped project</Dropdown.Item>
-            </DropdownButton>
+            <NavDropdown variant="link" id="dropdown-coming-soon" title="Coming soon">
+                <NavDropdown.Item><strong>Options</strong></NavDropdown.Item>
+                <NavDropdown.Item>TypeScript version</NavDropdown.Item>
+                <NavDropdown.Item>Open in new tab</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item><strong>Show</strong></NavDropdown.Item>
+                <NavDropdown.Item>Console</NavDropdown.Item>
+                <NavDropdown.Item>Output</NavDropdown.Item>
+                <NavDropdown.Item>Compiled JS</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item><strong>Other features</strong></NavDropdown.Item>
+                <NavDropdown.Item>Multiple files</NavDropdown.Item>
+                <NavDropdown.Item>Improved look</NavDropdown.Item>
+                <NavDropdown.Item>Better browser/mobile support</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item><strong>Demos</strong></NavDropdown.Item>
+                <NavDropdown.Item>React + TypeScript</NavDropdown.Item>
+                <NavDropdown.Item>Download as zipped project</NavDropdown.Item>
+            </NavDropdown>
 
-            {this.props.snippetId ? <span>Snippet: <code>{this.props.snippetId}</code></span> : ''}
-        </ButtonGroup>
+            {this.props.snippetId ? <Nav.Link>Snippet: <code>{this.props.snippetId}</code></Nav.Link> : ''}
+        </Nav>
     }
 
 }

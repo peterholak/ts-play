@@ -24,7 +24,7 @@ const config = {
     new CopyWebpackPlugin([
       { from: 'monaco-build/monaco-editor/release/min/vs', to: 'vs' },
       { from: 'monaco-build/monaco-editor/release/min-maps', to: 'min-maps' },
-      { from: 'index.html', to: '.' },
+      { from: 'src/index.html', to: '.' },
       { from: 'node_modules/bootstrap/dist/css', to: 'css' }
     ]),
   ],
