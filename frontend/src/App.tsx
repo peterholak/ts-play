@@ -57,6 +57,7 @@ class App extends React.Component<Props, State> {
                     <Navbar.Toggle aria-controls="navbar-menu" />
                     <Navbar.Collapse id="navbar-menu">
                         <Menu
+                            onNewClicked={this.onNewClicked}
                             onShareClicked={this.onShareClicked}
                             onTsconfigClicked={this.onTsconfigClicked}
                             onApplyTsconfigClicked={this.onApplyTsconfigClicked}
@@ -130,6 +131,14 @@ class App extends React.Component<Props, State> {
     /** Brings the `files` property in state into sync with the state inside monaco. */
     private updateFilesState() {
         this.setState({ files: monaco.editor.getModels() })
+    }
+
+    onNewClicked = () => {
+        if (!this.editor) { return }
+        // TODO: reset whole state, including files, etc.
+        this.editor.getModel()!.setValue('')
+        this.editor.focus()
+        browserHistory.push("/")
     }
 
     onShareClicked = async () => {

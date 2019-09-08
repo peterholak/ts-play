@@ -1,34 +1,19 @@
-import * as crypto from 'crypto'
 import levelup, { LevelUp } from 'levelup'
 import leveldown from 'leveldown'
 import encode from 'encoding-down'
+import { StoredValue, SnippetStorage, IdGenerator } from './schema'
 
-interface StoredValue {
-    version: number
-    code: string
-}
+export class LevelDBStorage implements SnippetStorage {
+    constructor(private db: LevelUp) { }
 
-export function makeSnippet(code: string): StoredValue {
-    return {
-        version: 1,
-        code
-    }
-}
-
-export class SnippetStorage {
-    constructor(
-        private db: LevelUp,
-        private random: (size: number) => Buffer = crypto.randomBytes
-    ) {
-
-    }
+    private idGenerator = new IdGenerator(this.exists.bind(this))
 
     static withFile(filename: string) {
-        return new SnippetStorage(levelup(encode(leveldown(filename), { valueEncoding: 'json' })))
+        return new LevelDBStorage(levelup(encode(leveldown(filename), { valueEncoding: 'json' })))
     }
 
     async save(contents: StoredValue) {
-        const id = await this.newId()
+        const id = await this.idGenerator.newId()
         return new Promise<string>((resolve, reject) => {
             this.db.put(id, contents, (err?: any) => {
                 if (err) { return reject(err) }
@@ -54,27 +39,19 @@ export class SnippetStorage {
         })
     }
 
+    async waitUntilReady() {
+        return
+    }
+
+    async healthCheck() {
+        return true // TODO
+    }
+
     async exists(id: string) {
         try {
             return await this.get(id) !== undefined
         }catch(e) {
             return false
         }
-    }
-
-    private async newId() {
-        let id: string
-        let tries = 0
-        while(true) {
-            id = this.random(3).toString('hex')
-            if (!await this.exists(id)) {
-                break
-            }
-            tries++
-            if (tries === 10) {
-                throw new Error("Failed to generate a unique new id.")
-            }
-        }
-        return id
     }
 }

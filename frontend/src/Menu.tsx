@@ -3,20 +3,21 @@ import { Button, DropdownButton, Dropdown, ButtonGroup, Nav, NavDropdown } from 
 
 export interface Props {
     snippetId: string | undefined
-    onShareClicked?: () => void
-    onTsconfigClicked?: () => void
-    onApplyTsconfigClicked?: () => void
+    onShareClicked: () => void
+    onNewClicked: () => void
+    onTsconfigClicked: () => void
+    onApplyTsconfigClicked: () => void
 }
 
 export class Menu extends React.Component<Props, {}> {
 
     render() {
         return <Nav>
-            <Nav.Link
-                id="dropdown-share"
-                onClick={this.props.onShareClicked}
-            >
+            <Nav.Link id="link-share" onClick={this.props.onShareClicked}>
                 Share
+            </Nav.Link>
+            <Nav.Link id="link-new" onClick={this.props.onNewClicked}>
+                New
             </Nav.Link>
 
             <NavDropdown id="dropdown-options" title="Options">
