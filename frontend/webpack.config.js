@@ -25,6 +25,8 @@ const config = {
       { from: 'monaco-build/monaco-editor/release/min/vs', to: 'vs' },
       { from: 'monaco-build/monaco-editor/release/min-maps', to: 'min-maps' },
       { from: 'src/index.html', to: '.' },
+      { from: 'favicon.png', to: '.' },
+      { from: 'favicon.svg', to: '.' },
       { from: 'node_modules/bootstrap/dist/css', to: 'css' }
     ]),
   ],

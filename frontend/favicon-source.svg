@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="favicon-source.svg"
+   inkscape:export-filename="C:\src\ts-play-clean\favicon.png"
+   inkscape:export-xdpi="87.325882"
+   inkscape:export-ydpi="87.325882">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="167.52614"
+     inkscape:cy="586.1866"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#000080;fill-opacity:1;stroke:none;stroke-width:0.73957533;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4520"
+       width="41.95536"
+       height="41.95536"
+       x="41.577377"
+       y="114.62649"
+       ry="12.64007"
+       inkscape:export-xdpi="96.647194"
+       inkscape:export-ydpi="96.647194"
+       inkscape:export-filename="C:\src\ts-play-clean\frontend\favicon.png" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:24.51198196px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.61279947"
+       x="45.2286"
+       y="150.53194"
+       id="text4524"
+       inkscape:export-xdpi="96.647194"
+       inkscape:export-ydpi="96.647194"
+       inkscape:export-filename="C:\src\ts-play-clean\frontend\favicon.png"><tspan
+         sodipodi:role="line"
+         id="tspan4522"
+         x="45.2286"
+         y="150.53194"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:24.51223755px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;fill:#ffffff;stroke-width:0.61279947">TS</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:16.6771431px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.41692859;"
+       x="70.93235"
+       y="151.76265"
+       id="text4528"
+       inkscape:export-xdpi="96.647194"
+       inkscape:export-ydpi="96.647194"
+       inkscape:export-filename="C:\src\ts-play-clean\frontend\favicon.png"><tspan
+         sodipodi:role="line"
+         id="tspan4526"
+         x="70.93235"
+         y="151.76265"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16.67721558px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#cccccc;stroke-width:0.41692859;">P</tspan></text>
+  </g>
+</svg>

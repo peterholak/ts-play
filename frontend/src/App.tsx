@@ -41,7 +41,11 @@ class App extends React.Component<Props, State> {
                 : ''}
             <Navbar bg="dark" variant="dark" expand="sm">
                 <Container>
-                    <Navbar.Brand>ts-play.com</Navbar.Brand>
+                    <Navbar.Brand>
+                        <img src="/favicon.svg" style={{ height: '30px', verticalAlign: 'bottom' }} />
+                        {' '}
+                        TS-PLAY.COM
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbar-menu" />
                     <Navbar.Collapse id="navbar-menu">
                         <Menu
@@ -53,6 +57,7 @@ class App extends React.Component<Props, State> {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
+            <div style={{ height: '3px', background: '#ddd', marginBottom: '0.5rem' }}></div>
             <Container style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <Row style={({ flex: 1, display: 'flex' })}>
                     <Col sm={8} style={{ flex: 1, display: 'flex' }}>
