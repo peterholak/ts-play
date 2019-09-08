@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>ts-play.com</title>
         <link rel="shortcut icon" type="image/png" href="favicon.png" />
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
@@ -14,6 +15,9 @@
             thing unable to shrink).
             */
             .monaco-editor { position: absolute; }
+
+            /* This prevents a page scrollbar appearing in Firefox after autocomplete box gets shown. */
+            .monaco-aria-container { top: 0; }
         </style>
     </head>
     <body>

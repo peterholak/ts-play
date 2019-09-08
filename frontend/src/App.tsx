@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { browserHistory } from './index'
-import { Row, Col, Container, Navbar } from 'react-bootstrap'
+import { Row, Col, Container, Navbar, Nav } from 'react-bootstrap'
 import Output from './Output'
 import Menu from './Menu'
 import EditorWithTabs from './EditorWithTabs'
@@ -39,12 +39,20 @@ class App extends React.Component<Props, State> {
             {this.state.loading ?
                 <div style={style.loading}>Loading...</div>
                 : ''}
-            <Navbar bg="dark" variant="dark" expand="sm">
+            <Navbar
+                bg="dark"
+                variant="dark"
+                expand="sm"
+                style={{ zIndex: 1, marginBottom: '0.5rem', boxShadow: '#888 2px 2px 4px 0'}}
+                >
                 <Container>
                     <Navbar.Brand>
-                        <img src="/favicon.svg" style={{ height: '30px', verticalAlign: 'bottom' }} />
-                        {' '}
-                        TS-PLAY.COM
+                        <a href="/" style={{ color: '#fff' }}>
+                            <img src="/favicon.svg" style={{ height: '30px', verticalAlign: 'bottom' }} />
+                            {' '}
+                            TS-PLAY.COM
+                        </a>
+                        <sub> TS {window.monaco && window.monaco.languages.typescript.typescriptVersion}</sub>
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbar-menu" />
                     <Navbar.Collapse id="navbar-menu">
@@ -57,7 +65,6 @@ class App extends React.Component<Props, State> {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <div style={{ height: '3px', background: '#ddd', marginBottom: '0.5rem' }}></div>
             <Container style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <Row style={({ flex: 1, display: 'flex' })}>
                     <Col sm={8} style={{ flex: 1, display: 'flex' }}>

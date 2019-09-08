@@ -23,7 +23,7 @@ class Output extends React.Component<Props, State> {
                 <Button onClick={this.runJs.bind(this)}>Run</Button>
                 <div style={{ width: '100%' }}>
                     <iframe
-                        style={{ width: '100%' }}
+                        style={{ width: '100%', border: '1px dashed #ccc' }}
                         srcDoc={this.frameContents()}
                         onLoad={() => this.myConsole!.connectConsole(this.jsFrame!.contentWindow)}
                         ref={frame => this.jsFrame = frame}
@@ -40,15 +40,20 @@ class Output extends React.Component<Props, State> {
 
     frameContents() {
         return `
+            <!DOCTYPE html>
             <html data-counter=${this.state.counter}>
+            <head>
+                <meta charset="UTF-8">
+            </head>
             <body>
                 <script>
                 window.addEventListener('DOMContentLoaded', function() {
                     window.setTimeout(function() {
+                        ${Output.consoleOverrides}
                         try {
                             ${this.state.js}
                         }catch(e) {
-                            window.parent.postMessage(e.toString(), '*')
+                            window.parent.postMessage(JSON.stringify({ type: 'error', message: e.toString() }), '*')
                         }
                     }, 1)
                 })
@@ -57,6 +62,18 @@ class Output extends React.Component<Props, State> {
             </html>
         `
     }
+
+    static consoleOverrides = `
+        function registerConsoleFunction(f) {
+            const original = console[f]
+            console[f] = function(message) {
+                window.parent.postMessage(JSON.stringify({ type: f, message }), '*')
+                original.apply(arguments)
+            }
+        }
+        registerConsoleFunction('log')
+        registerConsoleFunction('warn')
+    `
 
     async runJs() {
         const js = await this.props.getJs()
@@ -81,7 +98,6 @@ const topPartStyle: CSS = {
 
 const bottomPartStyle: CSS = {
     flex: 0.6,
-    borderTop: '1px solid #000',
     display: 'flex'
 }
 

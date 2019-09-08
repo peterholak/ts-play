@@ -26,8 +26,9 @@ export class Menu extends React.Component<Props, {}> {
 
             <NavDropdown variant="link" id="dropdown-coming-soon" title="Coming soon">
                 <NavDropdown.Item><strong>Options</strong></NavDropdown.Item>
-                <NavDropdown.Item>TypeScript version</NavDropdown.Item>
+                <NavDropdown.Item>TypeScript versions</NavDropdown.Item>
                 <NavDropdown.Item>Open in new tab</NavDropdown.Item>
+                <NavDropdown.Item>Embedding</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item><strong>Show</strong></NavDropdown.Item>
                 <NavDropdown.Item>Console</NavDropdown.Item>
